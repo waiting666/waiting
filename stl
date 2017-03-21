@@ -1,0 +1,579 @@
+# waiting
+#include <iostream>
+#include <vector>
+#include<deque>
+#include <list>
+#include<algorithm>
+#include<functional>//函数对象
+#include<iterator>
+
+//容器适配器 代理关系 功能子集
+#include<stack>
+#include <queue>
+using namespace std;
+
+template<typename key,typename value>
+struct mypair
+{
+	mypair(key &f = key(),value &v = value())
+		:first(f),second(v){}
+
+	key first;
+	value second;
+};
+
+template<typename key,typename value>
+mypair<key,value>mymakepair(key k,value v)
+{
+	return mypair<key,value>(k,v);
+}
+template<typename K,typename V,typename HASHTYPE>
+class HashMap
+{
+public:
+	HashMap(int bucknum);
+
+private:
+	HASHTYPE _hash;
+};
+int main()
+
+{
+
+	stack<int> mystack;
+	for (int i = 0;i<10;i++)
+	{
+		mystack.push(rand()%100);
+	}
+
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+/*
+vector<vector<int>>  二维数组
+vector<list<int>>
+//在容器里面重复多次删除
+//在容器里重复多次删除  迭代器会失效      
+template<typename Container>
+void showContainer(Container &con)
+{
+	Container::iterator it = con.begin();
+	for (;it != con.end();++it)
+	{
+		cout<<*it<<" ";
+	}
+	cout<<endl;
+}
+int main()
+{
+	vector<int> vec;
+	for (int i = 0;i<10;i++)
+	{
+		vec.push_back(rand()%100);
+	}
+	//sort(vec.begin(),vec.end());
+	sort(vec.begin(),vec.end(),less<int>());
+	showContainer(vec);
+    sort(vec.begin(),vec.end(),greater<int>());
+	
+	showContainer(vec);
+
+
+	vector<int>::iterator it = find(vec.begin(),vec.end(),64);
+	if (it != vec.end())
+	{
+		vec.erase(it);
+	}
+	
+    vector<int>::iterator it1 = find_if(vec.begin(),vec.end(),bind1st(greater<int>(),50));
+	if (it1 != vec.end())
+	{
+		cout<<*it1<<endl;
+		vec.erase(it1);
+	}
+
+//新建一个对象，将vec里面的拷贝给vec2,清除vec
+	vector<int> vec2;
+	copy(vec.begin(),vec.end(),back_inserter(vec2));
+	showContainer(vec2);
+	vec.clear();
+	showContainer(vec);
+
+    //插入100个个位数，删除重复值
+	for (int i = 0;i<100;i++)
+	{
+		vec.push_back(rand()%10);
+	}
+	showContainer(vec);
+	
+	sort(vec.begin(),vec.end());
+	vector<int>::iterator it3 = unique(vec.begin(),vec.end());
+	showContainer(vec);
+	vec.erase(it3,vec.end());
+	showContainer(vec);
+
+
+	//在偶数前加-1
+	vector<int>::iterator it4 = vec.begin();
+	for (;it4!= vec.end();++it4)
+	{
+		if (*it4 % 2 == 0)
+		{
+			int val = -1;
+			it4 = vec.insert(it4,val);
+			++it4;
+		}
+	}
+	
+
+	vector<int>::iterator it3=vec.begin();
+    vector<int>::iterator it5;
+	for ( it3=vec.begin();it3!=vec.end();++it3)
+	{
+		it5=it3+1;
+		while(it5!=vec.end())
+		{
+			if (*it5 == *it3)
+			{
+				it5 = vec.erase(it3);
+			}
+			else
+			{
+				++it5;
+			}
+		}
+		
+	}
+    
+
+
+
+	vector<int>::iterator it3=vec.begin();
+	for (int i = 0;i<10;i++)
+	{
+		for (it3=vec.begin();it3!=vec.end();++it3)
+		{
+			if (*it3 == i)
+			{
+				it3 = vec.erase(it3);
+			}
+		}
+	}
+	showContainer(vec);
+	return 0;
+
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*  
+template<typename InputIterator,typename T>
+InputIterator myfind(InputIterator first,InputIterator last,const T &val)
+{
+	
+	for (;first != last;++first)
+	{
+		if (*first == val)
+		{
+			return first;
+		}
+
+	}
+	return last;
+}
+template<typename T>
+class Cvector
+{
+public:
+	typedef T value_type;
+	Cvector() //不开辟内存
+		:mpvec(NULL),msize(0),mcur(0)
+	{
+		mpvec = NULL;
+		msize = 0;
+		mcur = 0;
+	}
+	~Cvector()
+	{
+		delete []mpvec;
+		mpvec = NULL;
+	}
+	Cvector(int size,const T &val = T())
+		:msize(size),mcur(size)
+	{
+		mpvec = new T[size];
+		msize = size;
+        mcur = 0;
+		for (int i =0;i<size;i++)
+		{
+			mpvec[i] = val;
+		}
+	}
+	
+	void push_back(const T &val)
+	{
+		if(full())
+		{
+			resize();
+		}
+		mpvec[mcur++] = val;
+	}
+	void pop_back()
+	{
+		if (empty())
+		{
+			return ;
+		}
+		mcur--;
+	}
+	T& operator[](int index)
+	{
+		return mpvec[index];
+	}
+	int size()const{return mcur;}
+	bool empty()const{return mcur==0;}
+	bool full()
+	{
+		return mcur == msize;
+
+	}
+
+	class iterator
+	{
+	public:
+		typedef T value_type;
+		iterator(T *ptr,int pos)
+		{
+			mit = ptr +pos;
+			
+		}
+		void operator++()
+		{
+			mit++;
+		}
+
+		bool operator!=(const iterator &src)
+		{
+			return mit != src.mit;
+		}
+		T &operator *()
+		{
+			return *mit;
+		}
+		iterator operator+(int size)
+		{
+			 return  iterator(mit+size,0);
+		}
+		iterator operator-(int size)
+		{
+			return iterator(mit-size,0);
+		}
+		
+	private:
+		T *mit;
+	};
+
+	iterator begin()
+	{
+		return iterator(mpvec,0);
+	}
+	iterator end()
+	{
+		return iterator(mpvec,mcur);
+	}
+
+	
+private:
+	T *mpvec;
+	int msize;
+	int mcur;
+
+	void resize()
+	{
+		if (mpvec = NULL)
+		{
+			mpvec = new T[1];
+			msize = 1;
+			mcur =0;
+		}
+		else
+		{
+			T *ptmp = new T[msize*2];
+			memcpy(ptmp,mpvec,sizeof(T)*mcur);
+			delete []mpvec;
+			mpvec = ptmp;
+
+		}
+
+	}
+    Cvector<T>& operator=(const Cvector<T>&src);
+	Cvector(const Cvector<T>&src);
+};
+
+template<typename Container>
+void showContainer(Container &con)
+{
+	Container::iterator it  = con.begin();
+	for (;it != con.end();++it)
+	{
+		cout<< *it <<" ";
+	}
+	cout<<endl;
+}
+template<typename InputIterator>
+void mysort(InputIterator first,InputIterator last
+			,bool (*pfunc)(typename InputIterator::value_type,
+			               typename InputIterator::value_type))
+{
+	typedef InputIterator::value_type T;
+	InputIterator it1 = first;
+	InputIterator it2 = first;
+    int k=0;
+	for (;it1 != last;++it1,++k)
+	{
+		for (it2 = first;it2!=last-1-k;++it2)
+		{
+		
+			if (*it2 > *(it2+1))
+			{
+				T tmp = *it2;
+				*it2 = *(it2+1);
+				*(it2+1) = tmp;
+			
+			}
+		}
+	}
+
+}
+template<typename T>
+bool _greater(T a,T b)
+{
+return a>b;
+}
+template<typename T>
+bool _less(T a,T b)
+{
+	return a<b;
+}
+
+
+template<typename InputIterator,typename Compare>
+void mysort(InputIterator first,InputIterator last
+			,Compare &comp)
+{
+	typedef InputIterator::value_type T;
+	InputIterator it1 = first;
+	InputIterator it2 = first;
+	int k=0;
+	for (;it1 != last;++it1,++k)
+	{
+		for (it2 = first;it2!=last-1-k;++it2)
+		{
+
+			if (*it2 > *(it2+1))
+			{
+				T tmp = *it2;
+				*it2 = *(it2+1);
+				*(it2+1) = tmp;
+
+			}
+		}
+	}
+
+}
+
+
+template<typename T>
+class Mygreater
+{
+public:
+	bool operator()(T a,T b)
+	{
+		return  a>b;
+	}
+
+};
+template<typename T>
+class Myless
+{
+public:
+	bool operator()(T a,T b)
+	{
+		return a<b;
+	}
+};
+
+
+template<typename InputIterator,typename Compare>
+InputIterator myfind_if(InputIterator first,InputIterator last
+						,Compare &comp)
+{
+
+	for (;first!=last;++first)
+	{
+		if (comp(*first))
+		{
+			return first;
+		}
+	}
+	return last;
+
+}
+
+template<typename T>
+class My_mless
+{
+public:
+	My_mless(T Val = T()):val(Val){}
+	bool operator()(T a)
+	{
+		return a<val;
+	}
+private:
+	T val;
+};
+
+
+template<typename InputIterator, typename OutputIterator>
+void mycopy(InputIterator first, InputIterator last,
+			OutputIterator dest)
+{
+	InputIterator it = first;
+	for (; it != last; ++first)
+	{
+		*dest = *it;
+		++dest;
+	}
+}
+
+
+template<typename Container>
+class myback_insert_iterator
+{
+public:
+    typedef typename Container::value_type T;
+	myback_insert_iterator(Container &Con):con(Con){}
+	void  operator=(const T&val)
+	{
+		con.push_back(val);
+		
+	}
+	myback_insert_iterator<Container>& operator*()
+	{
+		return *this;
+	}
+	myback_insert_iterator<Container>& operator++()
+	{
+		return *this;
+	}
+
+private:
+	Container &con;
+};
+
+
+template<typename Container>
+myback_insert_iterator<Container>myback_insert(Container &com)
+{
+	return myback_insert_iterator<Container>(com);
+}
+
+
+
+template<typename Container>
+class myback_front_iterator
+{
+public:
+	typedef typename Container::value_type T;
+	myback_front_iterator(Container &Con):con(Con){}
+	void  operator=(const T&val)
+	{
+		con.push_front(val);
+
+	}
+	myback_front_iterator<Container>& operator*()
+	{
+		return *this;
+	}
+	myback_front_iterator<Container>& operator++()
+	{
+		return *this;
+	}
+
+private:
+	Container &con;
+};
+
+
+template<typename Container>
+myback_insert_iterator<Container>myfront_insert(Container &com)
+{
+	return myback_front_iterator<Container>(com);
+}
+
+int main()
+{
+	Cvector<int> v1(10,0);
+	for (int i = 0;i<10;i++)
+	{
+		v1.push_back(rand()/100+1);
+	}
+	showContainer(v1);
+
+	Cvector<int>::iterator it = myfind(v1.begin(),v1.end(),1);
+	if (it != v1.end())
+	{
+		cout<<"find"<<endl;
+	}
+	Cvector<int>::iterator it1  = myfind_if(v1.begin(),v1.end()
+		                                       ,My_mless<int>(60));
+	if (it1 != v1.end())
+	{
+		cout<<"find -> "<<*it1<<endl;
+	}
+	else
+	{
+		cout<<"not find"<<endl;
+	}
+     Cvector<int> vec2(20,1);
+	 mycopy(v1.begin(),v1.end(),myback_insert(vec2));
+
+
+
+	//Myless<int> it;
+    // mysort(v1.begin(),v1.end(),it);
+
+    // mysort(v1.begin(),v1.end(),Myless<int>());
+	 //mysort(v1.begin(),v1.end());
+    //showContainer(v1);
+	
+	//mysort(v1.begin(),v1.end(),&_less<int>);
+
+	//Cvector<int>::iterator it1 = v1.begin();
+	for (;it1 != v1.end();++it1)
+	{
+		cout<< *it1 <<endl;
+	}
+
+	return 0;
+	
+}
